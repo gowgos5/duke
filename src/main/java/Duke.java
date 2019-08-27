@@ -7,11 +7,13 @@ public class Duke {
     private static final String INDENTATION_MESSAGE = "     ";
     private static final String MESSAGE_GREET = INDENTATION_MESSAGE + "Hello! I'm Duke\n" +
             INDENTATION_MESSAGE + "What can I do for you?";
-    private static final String MESSAGE_EXIT = INDENTATION_MESSAGE + "Bye. Hope to see you again soon!";
     private static final String MESSAGE_ADD = INDENTATION_MESSAGE + "added: ";
+    private static final String MESSAGE_DONE = INDENTATION_MESSAGE + "Nice! I've marked this task as done:";
+    private static final String MESSAGE_LIST = INDENTATION_MESSAGE + "Here are the tasks in your list:";
+    private static final String MESSAGE_EXIT = INDENTATION_MESSAGE + "Bye. Hope to see you again soon!";
 
     public static void main(String[] args) {
-        List<String> userMessages = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
@@ -30,23 +32,39 @@ public class Duke {
 
         while (!exitFlag) {
             String userMessage = scanner.nextLine();
+            String userCommand = userMessage.split("\\s+")[0];
 
             System.out.println(DIVIDER_LINE);
-            switch (userMessage) {
-                case "list":
+            switch (userCommand) {
+                case "done": {
+                    int index = Integer.parseInt(userMessage.split("\\s+")[1]);
+                    Task task = tasks.get(index - 1);
+                    task.markAsDone();
+
+                    System.out.println(MESSAGE_DONE);
+                    System.out.println(INDENTATION_MESSAGE + "  " + task.getStatusIcon() + " " + task.getDescription());
+                    break;
+                }
+                case "list": {
+                    System.out.println(MESSAGE_LIST);
+
                     int i = 1;
-                    for (String message : userMessages) {
-                        System.out.println(INDENTATION_MESSAGE + i++ + ". " + message);
+                    for (Task task : tasks) {
+                        System.out.println(INDENTATION_MESSAGE + i++ + "." + task.getStatusIcon() + " " +
+                                task.getDescription());
                     }
                     break;
-                case "bye":
-                    System.out.println(MESSAGE_EXIT);
+                }
+                case "bye": {
                     exitFlag = true;
+                    System.out.println(MESSAGE_EXIT);
                     break;
-                default:
-                    userMessages.add(userMessage);
+                }
+                default: {
+                    tasks.add(new Task(userMessage));
                     System.out.println(MESSAGE_ADD + userMessage);
                     break;
+                }
             }
             System.out.println(DIVIDER_LINE + "\n");
         }

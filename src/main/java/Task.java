@@ -12,7 +12,7 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "YES" : "NO"); // return tick or X symbols
+        return (isDone ? "[YES]" : "[NO]"); // return tick or X symbols
     }
 
     public String getDescription() {
