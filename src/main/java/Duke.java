@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class Duke {
     private static final String DIVIDER_LINE = "    ____________________________________________________________";
@@ -149,17 +147,18 @@ public class Duke {
             throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
         }
 
-        String dateTime;
+        String taskDateTime;
         try {
-            dateTime = taskProperties.split(term, 2)[1].trim();
+            taskDateTime = taskProperties.split(term, 2)[1].trim();
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
         }
 
-        if (dateTime.isEmpty()) {
+        if (taskDateTime.isEmpty()) {
             throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
         }
 
+        LocalDateTime dateTime = DateTimeParser.formatStringToDateTime(taskDateTime);
         if (taskType.equals("deadline")) {
             return new Deadline(description, dateTime);
         } else {
@@ -167,4 +166,3 @@ public class Duke {
         }
     }
 }
-

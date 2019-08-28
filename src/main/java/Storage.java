@@ -48,10 +48,10 @@ public class Storage {
                         task = new Todo(taskDescription);
                         break;
                     case "D":
-                        task = new Deadline(taskDescription, taskAttributes[3].trim());
+                        task = new Deadline(taskDescription, DateTimeParser.formatStringToDateTime(taskAttributes[3].trim()));
                         break;
                     case "E":
-                        task = new Event(taskDescription, taskAttributes[3].trim());
+                        task = new Event(taskDescription, DateTimeParser.formatStringToDateTime(taskAttributes[3].trim()));
                         break;
                 }
 
@@ -85,7 +85,8 @@ public class Storage {
                     String taskAttributes = taskType + " | " + (task.isDone ? "1" : "0") + " | " + task.getDescription();
 
                     if (task instanceof ITaskWithDateTime) {
-                        taskAttributes = taskAttributes.concat(" | " + ((ITaskWithDateTime) task).getDateTime());
+                        taskAttributes = taskAttributes.concat(" | " +
+                                DateTimeParser.formatDateTimeToString(((ITaskWithDateTime) task).getDateTime()));
                     }
 
                     // Write line to file

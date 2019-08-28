@@ -14,6 +14,8 @@ public class DukeException extends Exception {
             "Please exit the program and try again later.";
     public static final String EXCEPTION_ERROR_WRITE_FILE = "Failure writing to file duke.txt." +
             "Please exit the program and try again later.";
+    public static final String EXCEPTION_UNKNOWN_DATETIME_FORMAT = "I do not understand the date/time argument provided. " +
+            "Please provide the date/time in this format: dd/MM/yyyy HH:mm";
 
     public DukeException(String message) {
         super(message);

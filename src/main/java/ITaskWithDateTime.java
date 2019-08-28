@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+
 public interface ITaskWithDateTime {
-    String getDateTime();
+    LocalDateTime getDateTime();
 }

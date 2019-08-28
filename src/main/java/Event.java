@@ -1,18 +1,20 @@
-public class Event extends Task implements ITaskWithDateTime {
-    protected String at;
+import java.time.LocalDateTime;
 
-    public Event(String description, String at) {
+public class Event extends Task implements ITaskWithDateTime {
+    protected LocalDateTime at;
+
+    public Event(String description, LocalDateTime at) {
         super(description);
         this.at = at;
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (at: " + at + ")";
+        return "[E]" + super.toString() + " (at: " + DateTimeParser.formatDateTimeToString(at) + ")";
     }
 
     @Override
-    public String getDateTime() {
+    public LocalDateTime getDateTime() {
         return at;
     }
 }
