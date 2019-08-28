@@ -16,8 +16,6 @@ public class Duke {
     private static final String[] TYPE_COMMANDS = {"todo", "deadline", "event", "done", "list", "bye"};
 
     public static void main(String[] args) {
-        List<Task> tasks = new ArrayList<>();
-
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
                 + "| | | | | | | |/ / _ \\\n"
@@ -29,6 +27,17 @@ public class Duke {
         System.out.println(DIVIDER_LINE);
         System.out.println(MESSAGE_GREET);
         System.out.println(DIVIDER_LINE + "\n");
+
+        Storage storage = null;
+        List<Task> tasks = new ArrayList<>();
+        try {
+            storage = new Storage();
+            tasks = storage.getTasks();
+        } catch (DukeException e) {
+            System.out.println(DIVIDER_LINE);
+            System.out.println(INDENTATION_MESSAGE + e.getMessage());
+            System.out.println(DIVIDER_LINE + "\n");
+        }
 
         Scanner scanner = new Scanner(System.in);
         boolean exitFlag = false;
@@ -53,7 +62,11 @@ public class Duke {
                         }
 
                         Task task = setupTask(userCommand, taskProperties);
+                        if (storage == null) {
+                            throw new DukeException(DukeException.EXCEPTION_ERROR_WRITE_FILE);
+                        }
                         tasks.add(task);
+                        storage.updateFile(tasks);
 
                         System.out.println(MESSAGE_ADD);
                         System.out.println(INDENTATION_MESSAGE + "  " + task.toString());
@@ -74,12 +87,17 @@ public class Duke {
 
                         Task task = tasks.get(index);
                         task.markAsDone();
+                        storage.updateFile(tasks);
 
                         System.out.println(MESSAGE_DONE);
                         System.out.println(INDENTATION_MESSAGE + "  " + task.toString());
                         break;
                     }
                     case "list": {
+                        if (storage == null) {
+                            throw new DukeException(DukeException.EXCEPTION_ERROR_READ_FILE);
+                        }
+
                         System.out.println(MESSAGE_LIST);
 
                         int i = 1;
@@ -94,6 +112,7 @@ public class Duke {
                         break;
                     }
                 }
+
                 System.out.println(DIVIDER_LINE + "\n");
             } catch (DukeException e) {
                 System.out.println(INDENTATION_MESSAGE + e.getMessage());
@@ -148,3 +167,4 @@ public class Duke {
         }
     }
 }
+
