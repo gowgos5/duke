@@ -34,12 +34,11 @@ public class Duke {
         boolean exitFlag = false;
 
         while (!exitFlag) {
-            String userMessage = scanner.nextLine();
+            String userMessage = scanner.nextLine().trim();
+            System.out.println(DIVIDER_LINE);
 
             try {
-                System.out.println(DIVIDER_LINE);
-
-                String userCommand = userMessage.trim().split("\\s+")[0];
+                String userCommand = userMessage.split("\\s+")[0];
                 if (!Arrays.asList(TYPE_COMMANDS).contains(userCommand)) {
                     throw new DukeException(DukeException.EXCEPTION_UNKNOWN_COMMAND);
                 }
@@ -70,7 +69,7 @@ public class Duke {
                         }
 
                         if (index < 0 || index > tasks.size() - 1) {
-                            throw new DukeException(DukeException.EXCEPTION_TASKS_OUTOFBOUNDS);
+                            throw new DukeException(DukeException.EXCEPTION_TASK_NOT_FOUND);
                         }
 
                         Task task = tasks.get(index);
@@ -103,46 +102,49 @@ public class Duke {
         }
     }
 
-    private static Task setupTask(String userCommand, String taskProperties) throws DukeException {
-        switch (userCommand) {
+    private static Task setupTask(String taskType, String taskProperties) throws DukeException {
+        switch (taskType) {
             case "todo": {
                 return new Todo(taskProperties);
             }
-            case "deadline": {
-                String description = taskProperties.split("/by")[0].trim();
-
-                String dateTime;
-                try {
-                    dateTime = taskProperties.split("/by")[1].trim();
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
-                }
-
-                if (dateTime.isEmpty()) {
-                    throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
-                }
-
-                return new Deadline(description, dateTime);
-            }
+            case "deadline":
             case "event": {
-                String description = taskProperties.split("/at")[0].trim();
-
-                String dateTime;
-                try {
-                    dateTime = taskProperties.split("/at")[1].trim();
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
-                }
-
-                if (dateTime.isEmpty()) {
-                    throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
-                }
-
-                return new Event(description, dateTime);
+                return setupTaskWithDateTime(taskType, taskProperties);
             }
             default: {
                 throw new DukeException(DukeException.EXCEPTION_UNKNOWN_TASK);
             }
+        }
+    }
+
+    private static Task setupTaskWithDateTime(String taskType, String taskProperties) throws DukeException {
+        String term;
+        if (taskType.equals("deadline")) {
+            term = "/by";
+        } else {
+            term = "/at";
+        }
+
+        String description = taskProperties.split(term, 2)[0].trim();
+        if (description.isEmpty()) {
+            throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
+        }
+
+        String dateTime;
+        try {
+            dateTime = taskProperties.split(term, 2)[1].trim();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
+        }
+
+        if (dateTime.isEmpty()) {
+            throw new DukeException(DukeException.EXCEPTION_EMPTY_DATETIME);
+        }
+
+        if (taskType.equals("deadline")) {
+            return new Deadline(description, dateTime);
+        } else {
+            return new Event(description, dateTime);
         }
     }
 }
