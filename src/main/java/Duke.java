@@ -1,5 +1,8 @@
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Duke {
     private static final String DIVIDER_LINE = "    ____________________________________________________________";
@@ -8,7 +11,8 @@ public class Duke {
             INDENTATION_MESSAGE + "What can I do for you?";
     private static final String MESSAGE_ADD = INDENTATION_MESSAGE + "Got it. I've added this task:";
     private static final String MESSAGE_DONE = INDENTATION_MESSAGE + "Nice! I've marked this task as done:";
-    private static final String MESSAGE_LIST = INDENTATION_MESSAGE + "Here are the task(s) in your list:";
+    private static final String MESSAGE_LIST_EMPTY = INDENTATION_MESSAGE + "You have currently no tasks in your list.";
+    private static final String MESSAGE_LIST_NON_EMPTY = INDENTATION_MESSAGE + "Here are the task(s) in your list:";
     private static final String MESSAGE_EXIT = INDENTATION_MESSAGE + "Bye. Hope to see you again soon!";
 
     private static final String[] TYPE_COMMANDS = {"todo", "deadline", "event", "done", "list", "bye"};
@@ -96,7 +100,7 @@ public class Duke {
                             throw new DukeException(DukeException.EXCEPTION_ERROR_READ_FILE);
                         }
 
-                        System.out.println(MESSAGE_LIST);
+                        System.out.println(tasks.isEmpty() ? MESSAGE_LIST_EMPTY : MESSAGE_LIST_NON_EMPTY);
 
                         int i = 1;
                         for (Task task : tasks) {
