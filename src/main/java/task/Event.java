@@ -1,10 +1,19 @@
+package task;
+
+import parser.DateTimeParser;
+
 import java.time.LocalDateTime;
 
 public class Event extends Task implements ITaskWithDateTime {
-    protected LocalDateTime at;
+    private LocalDateTime at;
 
     public Event(String description, LocalDateTime at) {
         super(description);
+        this.at = at;
+    }
+
+    public Event(String description, LocalDateTime at, boolean isDone) {
+        super(description, isDone);
         this.at = at;
     }
 
