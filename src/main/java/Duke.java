@@ -7,15 +7,18 @@ import java.util.Scanner;
 public class Duke {
     private static final String DIVIDER_LINE = "    ____________________________________________________________";
     private static final String INDENTATION_MESSAGE = "     ";
-    private static final String MESSAGE_GREET = INDENTATION_MESSAGE + "Hello! I'm Duke\n" +
-            INDENTATION_MESSAGE + "What can I do for you?";
+    private static final String MESSAGE_GREET = INDENTATION_MESSAGE + "Hello! I'm Duke\n"
+            + INDENTATION_MESSAGE + "What can I do for you?";
     private static final String MESSAGE_ADD = INDENTATION_MESSAGE + "Got it. I've added this task:";
     private static final String MESSAGE_DONE = INDENTATION_MESSAGE + "Nice! I've marked this task as done:";
+    private static final String MESSAGE_FIND_EMPTY = INDENTATION_MESSAGE + "There are no matching tasks in your list. "
+            + "Please try another keyword.";
+    private static final String MESSAGE_FIND_NON_EMPTY = INDENTATION_MESSAGE + "Here are the matching tasks in your list:";
     private static final String MESSAGE_LIST_EMPTY = INDENTATION_MESSAGE + "You have currently no tasks in your list.";
     private static final String MESSAGE_LIST_NON_EMPTY = INDENTATION_MESSAGE + "Here are the task(s) in your list:";
     private static final String MESSAGE_EXIT = INDENTATION_MESSAGE + "Bye. Hope to see you again soon!";
 
-    private static final String[] TYPE_COMMANDS = {"todo", "deadline", "event", "done", "list", "bye"};
+    private static final String[] TYPE_COMMANDS = {"todo", "deadline", "event", "find", "done", "list", "bye"};
 
     public static void main(String[] args) {
         String logo = " ____        _        \n"
@@ -55,64 +58,90 @@ public class Duke {
                 }
 
                 switch (userCommand) {
-                    case "todo":
-                    case "deadline":
-                    case "event": {
-                        String taskProperties = userMessage.split(userCommand, 2)[1].trim();
-                        if (taskProperties.isEmpty()) {
-                            throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
-                        }
-
-                        Task task = setupTask(userCommand, taskProperties);
-                        if (storage == null) {
-                            throw new DukeException(DukeException.EXCEPTION_ERROR_WRITE_FILE);
-                        }
-                        tasks.add(task);
-                        storage.updateFile(tasks);
-
-                        System.out.println(MESSAGE_ADD);
-                        System.out.println(INDENTATION_MESSAGE + "  " + task.toString());
-                        System.out.println(INDENTATION_MESSAGE + "Now you have " + tasks.size() + " task(s) in the list.");
-                        break;
+                case "todo":
+                    // Fallthrough
+                case "deadline":
+                    // Fallthrough
+                case "event": {
+                    String taskProperties = userMessage.split(userCommand, 2)[1].trim();
+                    if (taskProperties.isEmpty()) {
+                        throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
                     }
-                    case "done": {
-                        int index;
-                        try {
-                            index = Integer.parseInt(userMessage.split("\\s+")[1]) - 1;
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
-                        }
 
-                        if (index < 0 || index > tasks.size() - 1) {
-                            throw new DukeException(DukeException.EXCEPTION_TASK_NOT_FOUND);
-                        }
-
-                        Task task = tasks.get(index);
-                        task.markAsDone();
-                        storage.updateFile(tasks);
-
-                        System.out.println(MESSAGE_DONE);
-                        System.out.println(INDENTATION_MESSAGE + "  " + task.toString());
-                        break;
+                    Task task = setupTask(userCommand, taskProperties);
+                    if (storage == null) {
+                        throw new DukeException(DukeException.EXCEPTION_ERROR_WRITE_FILE);
                     }
-                    case "list": {
-                        if (storage == null) {
-                            throw new DukeException(DukeException.EXCEPTION_ERROR_READ_FILE);
-                        }
+                    tasks.add(task);
+                    storage.updateFile(tasks);
 
-                        System.out.println(tasks.isEmpty() ? MESSAGE_LIST_EMPTY : MESSAGE_LIST_NON_EMPTY);
+                    System.out.println(MESSAGE_ADD);
+                    System.out.println(INDENTATION_MESSAGE + "  " + task.toString());
+                    System.out.println(INDENTATION_MESSAGE + "Now you have " + tasks.size() + " task(s) in the list.");
+                    break;
+                }
+                case "find": {
+                    String searchTerm = userMessage.split(userCommand, 2)[1].trim();
+                    if (searchTerm.isEmpty()) {
+                        throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
+                    }
 
-                        int i = 1;
-                        for (Task task : tasks) {
-                            System.out.println(INDENTATION_MESSAGE + i++ + "." + task.toString());
+                    if (storage == null) {
+                        throw new DukeException(DukeException.EXCEPTION_ERROR_READ_FILE);
+                    }
+
+                    List<Task> foundTasks = new ArrayList<>();
+                    for (Task task : tasks) {
+                        if (task.toString().contains(searchTerm)) {
+                            foundTasks.add(task);
                         }
-                        break;
                     }
-                    case "bye": {
-                        exitFlag = true;
-                        System.out.println(MESSAGE_EXIT);
-                        break;
+
+                    System.out.println(foundTasks.isEmpty() ? MESSAGE_FIND_EMPTY : MESSAGE_FIND_NON_EMPTY);
+
+                    int i = 1;
+                    for (Task task : foundTasks) {
+                        System.out.println(INDENTATION_MESSAGE + i++ + "." + task.toString());
                     }
+                    break;
+                }
+                case "done": {
+                    int index;
+                    try {
+                        index = Integer.parseInt(userMessage.split("\\s+")[1]) - 1;
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
+                    }
+
+                    if (index < 0 || index > tasks.size() - 1) {
+                        throw new DukeException(DukeException.EXCEPTION_TASK_NOT_FOUND);
+                    }
+
+                    Task task = tasks.get(index);
+                    task.markAsDone();
+                    storage.updateFile(tasks);
+
+                    System.out.println(MESSAGE_DONE);
+                    System.out.println(INDENTATION_MESSAGE + "  " + task.toString());
+                    break;
+                }
+                case "list": {
+                    if (storage == null) {
+                        throw new DukeException(DukeException.EXCEPTION_ERROR_READ_FILE);
+                    }
+
+                    System.out.println(tasks.isEmpty() ? MESSAGE_LIST_EMPTY : MESSAGE_LIST_NON_EMPTY);
+
+                    int i = 1;
+                    for (Task task : tasks) {
+                        System.out.println(INDENTATION_MESSAGE + i++ + "." + task.toString());
+                    }
+                    break;
+                }
+                case "bye":
+                    exitFlag = true;
+                    System.out.println(MESSAGE_EXIT);
+                    break;
                 }
 
                 System.out.println(DIVIDER_LINE + "\n");
@@ -125,16 +154,14 @@ public class Duke {
 
     private static Task setupTask(String taskType, String taskProperties) throws DukeException {
         switch (taskType) {
-            case "todo": {
-                return new Todo(taskProperties);
-            }
-            case "deadline":
-            case "event": {
-                return setupTaskWithDateTime(taskType, taskProperties);
-            }
-            default: {
-                throw new DukeException(DukeException.EXCEPTION_UNKNOWN_TASK);
-            }
+        case "todo":
+            return new Todo(taskProperties);
+        case "deadline":
+            // Fallthrough
+        case "event":
+            return setupTaskWithDateTime(taskType, taskProperties);
+        default:
+            throw new DukeException(DukeException.EXCEPTION_UNKNOWN_TASK);
         }
     }
 
