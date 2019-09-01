@@ -7,16 +7,19 @@ import java.util.Scanner;
 public class Duke {
     private static final String DIVIDER_LINE = "    ____________________________________________________________";
     private static final String INDENTATION_MESSAGE = "     ";
-    private static final String MESSAGE_GREET = INDENTATION_MESSAGE + "Hello! I'm Duke\n" +
-            INDENTATION_MESSAGE + "What can I do for you?";
+    private static final String MESSAGE_GREET = INDENTATION_MESSAGE + "Hello! I'm Duke\n"
+            + INDENTATION_MESSAGE + "What can I do for you?";
     private static final String MESSAGE_ADD = INDENTATION_MESSAGE + "Got it. I've added this task:";
     private static final String MESSAGE_DONE = INDENTATION_MESSAGE + "Nice! I've marked this task as done:";
     private static final String MESSAGE_REMOVE = INDENTATION_MESSAGE + "Noted. I've removed this task:";
+    private static final String MESSAGE_FIND_EMPTY = INDENTATION_MESSAGE + "There are no matching tasks in your list. "
+            + "Please try another keyword.";
+    private static final String MESSAGE_FIND_NON_EMPTY = INDENTATION_MESSAGE + "Here are the matching tasks in your list:";
     private static final String MESSAGE_LIST_EMPTY = INDENTATION_MESSAGE + "You have currently no tasks in your list.";
     private static final String MESSAGE_LIST_NON_EMPTY = INDENTATION_MESSAGE + "Here are the task(s) in your list:";
     private static final String MESSAGE_EXIT = INDENTATION_MESSAGE + "Bye. Hope to see you again soon!";
 
-    private static final String[] TYPE_COMMANDS = {"todo", "deadline", "event", "delete", "done", "list", "bye"};
+    private static final String[] TYPE_COMMANDS = {"todo", "deadline", "event", "find", "delete", "done", "list", "bye"};
 
     public static void main(String[] args) {
         String logo = " ____        _        \n"
@@ -111,6 +114,31 @@ public class Duke {
                     }
                     break;
                 }
+                case "find": {
+                    String searchTerm = userMessage.split(userCommand, 2)[1].trim();
+                    if (searchTerm.isEmpty()) {
+                        throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
+                    }
+
+                    if (storage == null) {
+                        throw new DukeException(DukeException.EXCEPTION_ERROR_READ_FILE);
+                    }
+
+                    List<Task> foundTasks = new ArrayList<>();
+                    for (Task task : tasks) {
+                        if (task.toString().contains(searchTerm)) {
+                            foundTasks.add(task);
+                        }
+                    }
+
+                    System.out.println(foundTasks.isEmpty() ? MESSAGE_FIND_EMPTY : MESSAGE_FIND_NON_EMPTY);
+
+                    int i = 1;
+                    for (Task task : foundTasks) {
+                        System.out.println(INDENTATION_MESSAGE + i++ + "." + task.toString());
+                    }
+                    break;
+                }
                 case "list": {
                     if (storage == null) {
                         throw new DukeException(DukeException.EXCEPTION_ERROR_READ_FILE);
@@ -143,6 +171,7 @@ public class Duke {
         case "todo":
             return new Todo(taskProperties);
         case "deadline":
+            // Fallthrough
         case "event":
             return setupTaskWithDateTime(taskType, taskProperties);
         default:
