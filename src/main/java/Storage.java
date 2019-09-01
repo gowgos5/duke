@@ -44,15 +44,15 @@ public class Storage {
 
                 Task task = null;
                 switch (taskType) {
-                    case "T":
-                        task = new Todo(taskDescription);
-                        break;
-                    case "D":
-                        task = new Deadline(taskDescription, DateTimeParser.formatStringToDateTime(taskAttributes[3].trim()));
-                        break;
-                    case "E":
-                        task = new Event(taskDescription, DateTimeParser.formatStringToDateTime(taskAttributes[3].trim()));
-                        break;
+                case "T":
+                    task = new Todo(taskDescription);
+                    break;
+                case "D":
+                    task = new Deadline(taskDescription, DateTimeParser.formatStringToDateTime(taskAttributes[3].trim()));
+                    break;
+                case "E":
+                    task = new Event(taskDescription, DateTimeParser.formatStringToDateTime(taskAttributes[3].trim()));
+                    break;
                 }
 
                 if (task != null) {
