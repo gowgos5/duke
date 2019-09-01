@@ -1,0 +1,31 @@
+todo borrow books
+deadline assignment 1 /by 01/09/2019 23:59
+list
+event Evan's birthday party /at 05/09/2019 15:00
+done 1
+todo return books
+event golden shower /at 05/09/2019 15:00
+list
+done 2
+list
+delete 3
+list
+find books
+blah
+todo
+deadline assignment 2
+deadline assignment 2 /by today
+event shower /by
+event shower /by 05/09/2019 23:59
+find
+find -
+done 4
+done x
+done
+delete 3
+delete 8
+delete this
+deadline assignment 2 /by 16/09/2019 15:00
+list
+list -
+bye
