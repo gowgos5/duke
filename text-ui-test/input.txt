@@ -28,4 +28,6 @@ delete this
 deadline assignment 2 /by 16/09/2019 15:00
 list
 list -
+todo eat dinner
+list
 bye
