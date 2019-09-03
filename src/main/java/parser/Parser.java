@@ -40,6 +40,10 @@ public class Parser {
                 }
 
                 String taskDescription = taskAttributes.split(key, 2)[0].trim();
+                if (taskDescription.isEmpty()) {
+                    throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
+                }
+
                 LocalDateTime taskDateTime;
                 try {
                     String dateTime = taskAttributes.split(key, 2)[1].trim();
