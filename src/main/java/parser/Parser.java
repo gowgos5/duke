@@ -74,8 +74,6 @@ public class Parser {
             int index;
             try {
                 index = Integer.parseInt(description) - 1;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
             } catch (NumberFormatException e) {
                 throw new DukeException(DukeException.EXCEPTION_NON_INTEGER_DESCRIPTION);
             }

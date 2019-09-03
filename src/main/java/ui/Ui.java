@@ -1,72 +1,68 @@
 package ui;
 
-import java.util.Scanner;
+import duke.Duke;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
-public class Ui {
-    public static final String MESSAGE_ADD = "Got it. I've added this task:";
-    public static final String MESSAGE_DONE = "Nice! I've marked this task as done:";
-    public static final String MESSAGE_DELETE = "Noted. I've removed this task:";
-    public static final String MESSAGE_FIND_EMPTY = "There are no matching tasks in your list. "
-            + "Please try another keyword.";
-    public static final String MESSAGE_FIND_NON_EMPTY = "Here are the matching task(s) in your list:";
-    public static final String MESSAGE_LIST_EMPTY = "You have currently no tasks in your list.";
-    public static final String MESSAGE_LIST_NON_EMPTY = "Here are the task(s) in your list:";
+public class Ui extends AnchorPane {
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private VBox dialogContainer;
+    @FXML
+    private TextField userInput;
+    @FXML
+    private Button sendButton;
 
-    private static final String DIVIDER_LINE = "    ____________________________________________________________";
-    private static final String INDENTATION_MESSAGE = "     ";
-    private static final String MESSAGE_WELCOME_GREET = "Hello! I'm Duke";
-    private static final String MESSAGE_WELCOME_QUESTION = "What can I do for you?";
-    private static final String MESSAGE_EXIT = "Bye. Hope to see you again soon!";
+    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
+    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
 
-    private Scanner scanner;
+    private Duke duke;
 
-    public Ui() {
-        scanner = new Scanner(System.in);
+    @FXML
+    private void initialize() {
+        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    public void showLine() {
-        System.out.println(DIVIDER_LINE);
+    @FXML
+    private void handleUserInput() {
+        String input = userInput.getText().trim();
+
+        if (!input.isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getUserDialog(input, userImage));
+
+            duke.respond(input);
+            userInput.clear();
+        }
     }
 
-    public void showBlankLine() {
-        System.out.println();
-    }
-
-    public void showMessage(String message) {
-        System.out.println(INDENTATION_MESSAGE + message);
-    }
-
-    public void showError(String errorMessage) {
-        System.out.println(INDENTATION_MESSAGE + errorMessage);
+    public void setDuke(Duke duke) {
+        this.duke = duke;
     }
 
     public void showWelcomeMessage() {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
-
-        showLine();
-        showMessage(MESSAGE_WELCOME_GREET);
-        showMessage(MESSAGE_WELCOME_QUESTION);
-        showLine();
-        showBlankLine();
+        String welcome = Message.MESSAGE_WELCOME_GREET + "\n" + Message.MESSAGE_WELCOME_QUESTION;
+        showMessage(welcome);
     }
 
     public void showExitMessage() {
-        showMessage(MESSAGE_EXIT);
+        showMessage(Message.MESSAGE_EXIT);
+    }
+
+    public void showMessage(String message) {
+        dialogContainer.getChildren().add(DialogBox.getDukeDialog(message, dukeImage));
     }
 
     public void showLoadingError(String errorMessage) {
-        showLine();
         showMessage(errorMessage);
-        showLine();
-        showBlankLine();
     }
 
-    public String readUserMessage() {
-        return scanner.nextLine().trim();
+    public void showError(String errorMessage) {
+        showMessage(errorMessage);
     }
 }

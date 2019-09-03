@@ -4,6 +4,7 @@ import exception.DukeException;
 import storage.Storage;
 import task.Task;
 import task.TaskList;
+import ui.Message;
 import ui.Ui;
 
 public class DoneCommand extends Command {
@@ -22,7 +23,7 @@ public class DoneCommand extends Command {
         Task task = tasks.markTaskAsDone(index);
         storage.save(tasks.getTasks());
 
-        ui.showMessage(Ui.MESSAGE_DONE);
-        ui.showMessage("  " + task.toString());
+        String message = Message.MESSAGE_DONE + "\n" + "  " + task.toString();
+        ui.showMessage(message);
     }
 }

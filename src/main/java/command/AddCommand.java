@@ -7,6 +7,7 @@ import task.Event;
 import task.Task;
 import task.TaskList;
 import task.Todo;
+import ui.Message;
 import ui.Ui;
 
 import java.time.LocalDateTime;
@@ -47,8 +48,8 @@ public class AddCommand extends Command {
         tasks.addTask(task);
         storage.save(tasks.getTasks());
 
-        ui.showMessage(Ui.MESSAGE_ADD);
-        ui.showMessage("  " + task.toString());
-        ui.showMessage("Now you have " + tasks.getSize() + " task(s) in the list.");
+        String message = Message.MESSAGE_ADD + "\n" + "  " + task.toString() + "\n"
+                + "Now you have " + tasks.getSize() + " task(s) in the list.";
+        ui.showMessage(message);
     }
 }

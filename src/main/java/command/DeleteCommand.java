@@ -4,6 +4,7 @@ import exception.DukeException;
 import storage.Storage;
 import task.Task;
 import task.TaskList;
+import ui.Message;
 import ui.Ui;
 
 public class DeleteCommand extends Command {
@@ -22,8 +23,8 @@ public class DeleteCommand extends Command {
         Task task = tasks.deleteTask(index);
         storage.save(tasks.getTasks());
 
-        ui.showMessage(Ui.MESSAGE_DELETE);
-        ui.showMessage("  " + task.toString());
-        ui.showMessage("Now you have " + tasks.getSize() + " task(s) in the list.");
+        String message = Message.MESSAGE_DELETE + "\n" + "  " + task.toString() + "\n"
+                + "Now you have " + tasks.getSize() + " task(s) in the list.";
+        ui.showMessage(message);
     }
 }
