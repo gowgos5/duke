@@ -65,4 +65,9 @@ public class Ui extends AnchorPane {
     public void showError(String errorMessage) {
         showMessage(errorMessage);
     }
+
+    public void exit() {
+        userInput.setDisable(true);
+        sendButton.setDisable(true);
+    }
 }

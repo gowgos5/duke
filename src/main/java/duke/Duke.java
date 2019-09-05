@@ -36,6 +36,7 @@ public class Duke {
             Command command = Parser.parse(userMessage);
             command.execute(tasks, ui, storage);
             exitFlag = command.isExit();
+            ui.exit();
         } catch (DukeException e) {
             ui.showError(e.getMessage());
         }
