@@ -1,3 +1,5 @@
+package duke;
+
 import command.Command;
 import exception.DukeException;
 import parser.Parser;
