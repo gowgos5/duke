@@ -2,6 +2,9 @@ package ui;
 
 import java.util.Scanner;
 
+/**
+ * Class responsible for the user interface of {@link duke.Duke Duke}.
+ */
 public class Ui {
     public static final String MESSAGE_ADD = "Got it. I've added this task:";
     public static final String MESSAGE_DONE = "Nice! I've marked this task as done:";

@@ -5,6 +5,9 @@ import storage.Storage;
 import task.TaskList;
 import ui.Ui;
 
+/**
+ * Abstract base class for all of the Commands {@link duke.Duke Duke} may execute during its operation.
+ */
 public abstract class Command {
     protected boolean exit;
 
