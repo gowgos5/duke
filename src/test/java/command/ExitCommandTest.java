@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExitCommandTest {
     private static final String PATH_FILE_STORAGE = System.getProperty("user.dir") + "/data/duke_test.txt";
-    private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private static final PrintStream outStandard = System.out;
+    private static final ByteArrayOutputStream outNew = new ByteArrayOutputStream();
 
     private TaskList taskList;
     private Ui ui;
@@ -29,13 +30,13 @@ class ExitCommandTest {
     @BeforeAll
     static void setUp() throws IOException {
         Files.deleteIfExists(new File(PATH_FILE_STORAGE).toPath());
-        System.setOut(new PrintStream(outContent));
+        System.setOut(new PrintStream(outNew));
     }
 
     @AfterAll
     static void tearDown() throws IOException {
         Files.deleteIfExists(new File(PATH_FILE_STORAGE).toPath());
-        System.setOut(System.out);
+        System.setOut(outStandard);
     }
 
     @BeforeEach
@@ -49,6 +50,6 @@ class ExitCommandTest {
     void execute_exit_success() throws DukeException {
         Command exitCommand = Parser.parse("bye");
         exitCommand.execute(taskList, ui, storage);
-        assertEquals(outContent.toString().trim(), "Bye. Hope to see you again soon!");
+        assertEquals(outNew.toString().trim(), "Bye. Hope to see you again soon!");
     }
 }
