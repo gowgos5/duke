@@ -7,6 +7,9 @@ import storage.Storage;
 import task.TaskList;
 import ui.Ui;
 
+/**
+ * A Personal Assistant Chatbot that helps a person keep track of his/her {@link task.Task Tasks}.
+ */
 public class Duke {
     private static final String PATH_FILE_TASK_LIST = System.getProperty("user.dir") + "/data/duke.txt";
 

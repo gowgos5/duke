@@ -12,7 +12,17 @@ import exception.DukeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Class responsible for parsing the user messages received by {@link duke.Duke Duke}.
+ */
 public class Parser {
+    /**
+     * Obtains an instance of {@link command.Command} from the user message received.
+     *
+     * @param userMessage String message inputted by the user.
+     * @return Command to be executed by Duke.
+     * @throws DukeException If the format of the user message received is incorrect.
+     */
     public static Command parse(String userMessage) throws DukeException {
         String command = userMessage.split("\\s+")[0];
 
@@ -74,8 +84,6 @@ public class Parser {
             int index;
             try {
                 index = Integer.parseInt(description) - 1;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                throw new DukeException(DukeException.EXCEPTION_EMPTY_DESCRIPTION);
             } catch (NumberFormatException e) {
                 throw new DukeException(DukeException.EXCEPTION_NON_INTEGER_DESCRIPTION);
             }

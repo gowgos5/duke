@@ -7,6 +7,10 @@ import ui.Ui;
 
 import java.util.List;
 
+/**
+ * Represents a specialised {@link command.Command} to search for relevant {@link task.Task Tasks}
+ * in the user's Task list.
+ */
 public class FindCommand extends Command {
     private String searchTerm;
 
@@ -14,6 +18,13 @@ public class FindCommand extends Command {
         this.searchTerm = searchTerm;
     }
 
+    /**
+     * Executes Command to search for relevant Tasks in the user's Task list.
+     *
+     * @param tasks   User's current {@link task.TaskList}.
+     * @param ui      {@link ui.Ui} object.
+     * @param storage {@link storage.Storage} object.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         List<Task> foundTaskList = tasks.findTasks(searchTerm);

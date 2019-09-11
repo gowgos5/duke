@@ -22,6 +22,9 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class responsible for all I/O operations (i.e. read/write operations on the hard drive) of {@link duke.Duke Duke}.
+ */
 public class Storage {
     private String filePath;
 
@@ -42,6 +45,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads text file (saved in hard drive) to retrieve the saved Task list.
+     *
+     * @return List of Tasks retrieved.
+     * @throws DukeException If there is an error reading the text file,
+     *                       or the format of the date and time read is incorrect.
+     */
     public List<Task> load() throws DukeException {
         try (FileReader fr = new FileReader(filePath);
              BufferedReader br = new BufferedReader(fr)) {
@@ -84,6 +94,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Writes Task list into the text file (saved on the hard drive).
+     *
+     * @param taskList Task list to be written.
+     * @throws DukeException If there is an error writing to the text file.
+     */
     public void save(List<Task> taskList) throws DukeException {
         try (FileWriter fw = new FileWriter(filePath, false);
              BufferedWriter bw = new BufferedWriter(fw);
@@ -95,8 +111,8 @@ public class Storage {
 
                 String taskAttributes = taskType + " | " + taskStatus + " | " + taskDescription;
                 if (task instanceof ITaskWithDateTime) {
-                    taskAttributes = taskAttributes.concat(" | " +
-                            DateTimeParser.formatDateTimeToString(((ITaskWithDateTime) task).getDateTime()));
+                    taskAttributes = taskAttributes.concat(" | "
+                            + DateTimeParser.formatDateTimeToString(((ITaskWithDateTime) task).getDateTime()));
                 }
 
                 // Write line to file

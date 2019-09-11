@@ -11,6 +11,9 @@ import ui.Ui;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a specialised {@link command.Command} to add {@link task.Task} to the user's Task list.
+ */
 public class AddCommand extends Command {
     private String taskType;
     private String taskDescription;
@@ -28,6 +31,14 @@ public class AddCommand extends Command {
         this.taskDateTime = taskDateTime;
     }
 
+    /**
+     * Executes Command to add Task.
+     *
+     * @param tasks   User's current {@link task.TaskList}.
+     * @param ui      {@link ui.Ui} object.
+     * @param storage {@link storage.Storage} object.
+     * @throws DukeException If the storage object faces an error writing to the text file (in the hard drive).
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         Task task;
